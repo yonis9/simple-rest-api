@@ -1,0 +1,6 @@
+[
+  {"id":1, "brand": "mazda", "model":  "cx5", "color": "white", "owner_id": 1},
+  {"id":2, "brand": "mercedes", "model":  "c300", "color": "black", "owner_id": 2},
+  {"id":3, "brand": "audi", "model":  "q8", "color": "silver", "owner_id": 2},
+  {"id":4, "brand": "subaru", "model":  "crime", "color": "brown", "owner_id": 3}
+]
