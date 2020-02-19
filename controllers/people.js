@@ -1,4 +1,5 @@
 const people = require("../seed/people");
+const cars = require("../seed/cars");
 
 
 const getPeople = (ctx) => {
@@ -6,7 +7,7 @@ const getPeople = (ctx) => {
   }
 
 
-const createPerson = (ctx) => {
+const addPerson = (ctx) => {
     const { name, age  } = ctx.request.body;
 
     if (!name || !age) {
@@ -27,7 +28,7 @@ const getPerson = (ctx, next) => {
     const person = people.find((el, i) => el.id == paramsId);
 
     if (!person) {
-        ctx.status = 400;
+        ctx.status = 404;
         ctx.body = 'Person not found';
         return
     }
@@ -39,20 +40,21 @@ const updatePerson = (ctx) => {
     const id = ctx.params.id;
     const person = people.find(el => el.id == id);
 
-    const { name, age } = ctx.request.body;
-
     if (!person) {
-        ctx.status = 400;
+        ctx.status = 404;
         ctx.body = 'Person not found';
         return
-    } else if (!name || !age) {
+    } 
+
+    const { name, age } = ctx.request.body;
+    if (!name || !age) {
         ctx.status = 400;
         ctx.body = 'Please make sure you fill all fields correctly';
         return
     }
 
-    const newPerson = { ...person, name, age }
     const index = people.findIndex(el => el.id == id)
+    const newPerson = { ...person, name, age }
     people[index] = newPerson
     ctx.body = newPerson;
 }
@@ -63,22 +65,45 @@ const deletePerson = (ctx) => {
     const person = people.find((el, i) => el.id == id);
 
     if (!person) {
-        ctx.status = 400;
+        ctx.status = 404;
         ctx.body = 'Person not found';
         return
     }
 
     const index = people.findIndex(el => el.id == id);
     people.splice(index, 1);
-    console.log(people)
-    ctx.body = { ...person ,message: 'person successfuly deleted' };
+    ctx.body = { ...person ,message: 'person successfully deleted' };
 }
 
 
+const getCarsOfPerson = (ctx) => {
+    const id = ctx.params.id;
+    const person = people.find((el, i) => el.id == id);
+
+    if (!person) {
+        ctx.status = 404;
+        ctx.body = 'Person not found';
+        return
+    }
+
+    ctx.body = cars.filter(car => car.owner_id == id);
+}
+
+
+const getPeopleWithoutCars = (ctx) => {
+    let filteredPeople = people;
+    for (let i=0; i< cars.length; i++) {
+        filteredPeople = filteredPeople.filter(p => p.id != cars[i].owner_id)
+    }
+    console.log(filteredPeople)
+}
+
   module.exports = {
       getPeople,
-      createPerson,
+      addPerson,
       getPerson,
       updatePerson,
-      deletePerson
+      deletePerson,
+      getCarsOfPerson,
+      getPeopleWithoutCars
   }
