@@ -2,6 +2,11 @@ const cars = require("../seed/cars");
 const people = require("../seed/people");
 
 const getCars = (ctx) => {
+    const { brand } = ctx.query;
+    if(brand) {
+        ctx.body = cars.filter(c => c.brand == brand);
+        return
+    }
     ctx.body = cars;
 }
 
@@ -88,6 +93,11 @@ const getPeopleWithoutCars = (ctx) => {
 }
 
 
+const getCarByBrand = (ctx) => {
+    const { brandName } = ctx.params;
+    ctx.body = cars.filter(c => c.brand == brandName);
+}
+
 
 module.exports = {
     getCars,
@@ -95,5 +105,6 @@ module.exports = {
     getCar,
     updateCar,
     deleteCar,
-    getPeopleWithoutCars
+    getPeopleWithoutCars,
+    getCarByBrand
 }
