@@ -3,6 +3,41 @@ const cars = require("../seed/cars");
 
 
 const getPeople = (ctx) => {
+    const { havecar } = ctx.query;
+
+//GET PEOPLE WHO OWNS CARS
+
+    if ( havecar === 'true') {
+        let filteredPeople = [];
+      
+        for (let i=0; i< people.length; i++) {
+            if (cars.find( c => c.owner_id == people[i].id)) {
+                filteredPeople.push(people[i])
+            }
+        }
+
+        ctx.body = filteredPeople;
+        return;
+    
+    }
+
+    //GET PEOPLE WHO DOESN'T OWNS CARS
+
+    if (havecar === 'false') {
+        let filteredPeople = [];
+      
+        for (let i=0; i< people.length; i++) {
+            if (!cars.find( c => c.owner_id == people[i].id)) {
+                filteredPeople.push(people[i])
+            }
+        }
+
+        ctx.body = filteredPeople;
+        return;
+    }
+
+    //GET ALL PEOPLE
+
     ctx.body = people;
   }
 
@@ -30,7 +65,7 @@ const getPerson = (ctx, next) => {
     if (!person) {
         ctx.status = 404;
         ctx.body = 'Person not found';
-        return
+        return;
     }
     ctx.body = person;
 }
@@ -43,14 +78,14 @@ const updatePerson = (ctx) => {
     if (!person) {
         ctx.status = 404;
         ctx.body = 'Person not found';
-        return
+        return;
     } 
 
     const { name, age } = ctx.request.body;
     if (!name || !age) {
         ctx.status = 400;
         ctx.body = 'Please make sure you fill all fields correctly';
-        return
+        return;
     }
 
     const index = people.findIndex(el => el.id == id)
@@ -67,7 +102,7 @@ const deletePerson = (ctx) => {
     if (!person) {
         ctx.status = 404;
         ctx.body = 'Person not found';
-        return
+        return;
     }
 
     const index = people.findIndex(el => el.id == id);
@@ -83,20 +118,12 @@ const getCarsOfPerson = (ctx) => {
     if (!person) {
         ctx.status = 404;
         ctx.body = 'Person not found';
-        return
+        return;
     }
 
     ctx.body = cars.filter(car => car.owner_id == id);
 }
 
-
-const getPeopleWithoutCars = (ctx) => {
-    let filteredPeople = people;
-    for (let i=0; i< cars.length; i++) {
-        filteredPeople = filteredPeople.filter(p => p.id != cars[i].owner_id)
-    }
-    console.log(filteredPeople)
-}
 
   module.exports = {
       getPeople,
@@ -104,6 +131,5 @@ const getPeopleWithoutCars = (ctx) => {
       getPerson,
       updatePerson,
       deletePerson,
-      getCarsOfPerson,
-      getPeopleWithoutCars
+      getCarsOfPerson
   }

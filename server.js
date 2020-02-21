@@ -38,15 +38,8 @@ router.get('/people/:id/cars', (ctx, next) => people.getCarsOfPerson(ctx));
 
 router.get('/cars/people/dontown', (ctx, next) => cars.getPeopleWithoutCars(ctx));
 
-// get cars by brand with params
 router.get('/cars/brand/:brandName', (ctx, next) => cars.getCarByBrand(ctx))
 
-
-// get cars by brand with query params
-
-router.get('/cars/brand', (ctx, next) => {
-  console.log(ctx.query)
-})
 
 app
   .use(router.routes())
